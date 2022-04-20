@@ -23,7 +23,18 @@ app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
 @app.route('/')
 def index():
-    return render_template('main.html',title='Hello')
+    if 'uid' not in session:
+        return render_template('login.html')
+    else:
+        return render_template('main.html')
+
+@app.route('/login/', methods=['POST'])
+def login():
+    uid = request.form.get('uid')
+    session['uid'] = uid
+    return redirect(url_for('index'))
+
+
 
 @app.route('/greet/', methods=["GET", "POST"])
 def greet():
