@@ -1,30 +1,30 @@
 use mt1_db;
 
 load data local infile 'groups-list.csv'
-into table groups
+into table group
 fields terminated by ',' 
 lines terminated by '\n'
 ignore 1 lines;
 
 load data local infile 'albums-list.csv'
-into table albums
+into table album
 fields terminated by ',' 
 lines terminated by '\n'
 ignore 1 lines;
 
 load data local infile 'idols-list.csv'
-into table idols
+into table idol
 fields terminated by ',' 
 lines terminated by '\n'
 ignore 1 lines;
 
 load data local infile 'cards-list.csv'
-into table cards
+into table card
 fields terminated by ',' 
 lines terminated by '\n'
 ignore 1 lines;
 
-insert into users(uid,name,phnum,address)
+insert into user(uid,name,phnum,address)
 values
     (1,'Claire','3392130056','Unit 4813'),
     (2,'Michelle','7817085206','Unit 5727'),
@@ -38,7 +38,7 @@ values
     (10,'Jolina','6469196104','Freeman 210');
 
 load data local infile 'items-list.csv'
-into table items
+into table item
 fields terminated by ',' 
 lines terminated by '\n'
 ignore 1 lines;
@@ -48,3 +48,18 @@ into table sell
 fields terminated by ',' 
 lines terminated by '\n'
 ignore 1 lines;
+
+load data local infile 'buy-list.csv'
+into table buy
+fields terminated by ',' 
+lines terminated by '\n'
+ignore 1 lines;
+
+alter table card add avg_price float;
+
+
+update card join
+        (select item.cid as cid, avg(sell.price) as avg_price
+        from item inner join sell on item.itid = sell.itid) as a
+        on card.cid = a.cid
+    set card.avg_price = a.avg_price;

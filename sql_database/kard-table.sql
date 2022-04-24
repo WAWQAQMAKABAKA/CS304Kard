@@ -1,62 +1,63 @@
 use mt1_db;
 
+drop table if exists buy;
 drop table if exists sell;
-drop table if exists items;
-drop table if exists users;
-drop table if exists cards;
-drop table if exists idols;
-drop table if exists albums;
-drop table if exists groups;
+drop table if exists item;
+drop table if exists user;
+drop table if exists card;
+drop table if exists idol;
+drop table if exists album;
+drop table if exists group;
 
-CREATE TABLE groups (
+CREATE TABLE group (
     gid int not null,
     name varchar(50),
     PRIMARY KEY (gid)
 )
 ENGINE=InnoDB;
 
-CREATE TABLE albums (
+CREATE TABLE album (
     aid int not null,
     gid int not null,
     name varchar(50),
     PRIMARY KEY (aid),
-    foreign key (gid) references groups(gid) 
+    foreign key (gid) references group(gid) 
         on update restrict
         on delete restrict
 )
 ENGINE=InnoDB;
 
-CREATE TABLE idols (
+CREATE TABLE idol (
     idid int not null,
     gid int not null,
     name varchar(50),
     PRIMARY KEY (idid),
-    foreign key (gid) references groups(gid) 
+    foreign key (gid) references group(gid) 
         on update restrict
         on delete restrict
 )
 ENGINE=InnoDB;
 
-CREATE TABLE cards (
+CREATE TABLE card (
     cid int not null,
     count int not null,
     gid int not null,
     aid int not null,
     idid int not null,
     PRIMARY KEY (cid),
-    foreign key (gid) references groups(gid) 
+    foreign key (gid) references group(gid) 
         on update restrict
         on delete restrict,
-    foreign key (aid) references albums(aid) 
+    foreign key (aid) references album(aid) 
         on update restrict
         on delete restrict,
-    foreign key (idid) references idols(idid) 
+    foreign key (idid) references idol(idid) 
         on update restrict
         on delete restrict
 )
 ENGINE=InnoDB;
 
-CREATE TABLE users (
+CREATE TABLE user (
     uid int not null,
     name varchar(50),
     phnum char(10),
@@ -65,13 +66,13 @@ CREATE TABLE users (
 )
 ENGINE=InnoDB;
 
-CREATE TABLE items (
+CREATE TABLE item (
     itid int not null,
     cid int not null,
     status enum('available','sold'),
     description varchar(100),
     PRIMARY KEY (itid),
-    foreign key (cid) references cards(cid) 
+    foreign key (cid) references card(cid) 
         on update restrict
         on delete restrict
 )
@@ -81,15 +82,25 @@ CREATE TABLE sell (
     uid int not null,
     itid int not null,
     price int not null,
-    buy int,
     PRIMARY KEY (uid,itid),
-    foreign key (uid) references users(uid) 
+    foreign key (uid) references user(uid) 
         on update restrict
         on delete restrict,
-    foreign key (itid) references items(itid) 
+    foreign key (itid) references item(itid) 
+        on update restrict
+        on delete restrict
+)
+ENGINE=InnoDB;
+
+CREATE TABLE buy (
+    uid int not null,
+    itid int not null,
+    price int not null,
+    PRIMARY KEY (uid, itid),
+    foreign key (uid) references user(uid) 
         on update restrict
         on delete restrict,
-    foreign key (buy) references users(uid) 
+    foreign key (itid) references item(itid) 
         on update restrict
         on delete restrict
 )
