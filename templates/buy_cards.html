@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<h1> Hii</h1>
+<form method=POST action="{{url_for('index')}}">
+    <label for="card">Available Albums:</label>
+    <select id="card" name="card">
+      <option value="none">Choose One</option>
+      {% for card in cards %}
+        <option value="{{card['cid']}}">{{card['cid']}}</option>
+       {% endfor %}
+    </select>
+    <input type="submit" name="submit-btn" value="Confirm">
+</form>
+{% endblock %}

@@ -1,7 +1,7 @@
-use mt1_db;
+use yc5_db;
 
 load data local infile 'groups-list.csv'
-into table group
+into table `group`
 fields terminated by ',' 
 lines terminated by '\n'
 ignore 1 lines;
@@ -58,8 +58,8 @@ ignore 1 lines;
 alter table card add avg_price float;
 
 
-update card join
-        (select item.cid as cid, avg(sell.price) as avg_price
-        from item inner join sell on item.itid = sell.itid) as a
-        on card.cid = a.cid
-    set card.avg_price = a.avg_price;
+-- update card join
+--         (select item.cid as cid, avg(sell.price) as avg_price
+--         from item inner join sell on item.itid = sell.itid) as a
+--         on card.cid = a.cid
+--     set card.avg_price = a.avg_price;

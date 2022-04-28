@@ -26,12 +26,12 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">KARD</a>
+      <a class="navbar-brand" href="{{ url_for('index') }}">KARD</a>
     </div>
     <ul class="nav navbar-nav">
       <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
-      <li><a href="{{ url_for('index') }}">Explore</a></li>
-      <li><a href="{{ url_for('index') }}">Explore</a></li>
+      <li><a href="{{ url_for('buy') }}">Buy</a></li>
+      <li><a href="{{ url_for('sell') }}">Sell</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li> -->

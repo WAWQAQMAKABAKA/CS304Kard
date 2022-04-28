@@ -1,4 +1,4 @@
-use mt1_db;
+use yc5_db;
 
 drop table if exists buy;
 drop table if exists sell;
@@ -7,9 +7,9 @@ drop table if exists user;
 drop table if exists card;
 drop table if exists idol;
 drop table if exists album;
-drop table if exists group;
+drop table if exists `group`;
 
-CREATE TABLE group (
+CREATE TABLE `group` (
     gid int not null,
     name varchar(50),
     PRIMARY KEY (gid)
@@ -21,7 +21,7 @@ CREATE TABLE album (
     gid int not null,
     name varchar(50),
     PRIMARY KEY (aid),
-    foreign key (gid) references group(gid) 
+    foreign key (gid) references `group`(gid) 
         on update restrict
         on delete restrict
 )
@@ -32,7 +32,7 @@ CREATE TABLE idol (
     gid int not null,
     name varchar(50),
     PRIMARY KEY (idid),
-    foreign key (gid) references group(gid) 
+    foreign key (gid) references `group`(gid) 
         on update restrict
         on delete restrict
 )
@@ -45,7 +45,7 @@ CREATE TABLE card (
     aid int not null,
     idid int not null,
     PRIMARY KEY (cid),
-    foreign key (gid) references group(gid) 
+    foreign key (gid) references `group`(gid) 
         on update restrict
         on delete restrict,
     foreign key (aid) references album(aid) 

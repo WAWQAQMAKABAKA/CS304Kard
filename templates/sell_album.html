@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<h1> Hii</h1>
+<form method=POST action="{{url_for('sell_group', gid = gid)}}">
+    <label for="album">Available Albums:</label>
+    <select id="album" name="album">
+      <option value="none">Choose One</option>
+      {% for album in albums %}
+        <option value="{{album['aid']}}">{{album['name']}}</option>
+       {% endfor %}
+    </select>
+    <input type="submit" name="submit-btn" value="Confirm">
+</form>
+{% endblock %}

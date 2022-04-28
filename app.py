@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 import cs304dbi as dbi
 # import cs304dbi_sqlite3 as dbi
+import  db_interaction as dbact
 
 import random
 
@@ -23,10 +24,10 @@ app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
 @app.route('/')
 def index():
-    if 'uid' not in session:
-        return render_template('login.html')
-    else:
-        return render_template('main.html')
+    # if 'uid' not in session:
+    #     return render_template('login.html')
+    # else:
+    return render_template('base.html')
 
 @app.route('/login/', methods=['POST'])
 def login():
@@ -35,50 +36,77 @@ def login():
     return redirect(url_for('index'))
 
 
-
-@app.route('/greet/', methods=["GET", "POST"])
-def greet():
+@app.route('/buy/', methods=['GET', 'POST'])
+def buy():
     if request.method == 'GET':
-        return render_template('greet.html', title='Customized Greeting')
+        conn = dbi.connect()
+        groups = dbact.get_all_groups(conn)
+        return render_template('buy_group.html', groups = groups)
     else:
-        try:
-            username = request.form['username'] # throws error if there's trouble
-            flash('form submission successful')
-            return render_template('greet.html',
-                                   title='Welcome '+username,
-                                   name=username)
+        gid = request.form.get('group')
+        return redirect(url_for('buy_group', gid = gid))
 
-        except Exception as err:
-            flash('form submission error'+str(err))
-            return redirect( url_for('index') )
-
-@app.route('/formecho/', methods=['GET','POST'])
-def formecho():
+@app.route('/buy/g<gid>', methods=['GET','POST'])
+def buy_group(gid):
     if request.method == 'GET':
-        return render_template('form_data.html',
-                               method=request.method,
-                               form_data=request.args)
-    elif request.method == 'POST':
-        return render_template('form_data.html',
-                               method=request.method,
-                               form_data=request.form)
+        conn = dbi.connect()
+        albums = dbact.get_albums(conn, gid)
+        return render_template('buy_album.html', gid = gid, albums = albums)
     else:
-        # maybe PUT?
-        return render_template('form_data.html',
-                               method=request.method,
-                               form_data={})
+        aid = request.form.get('album')
+        return redirect(url_for('buy_album', aid = aid))
 
-@app.route('/testform/')
-def testform():
-    # these forms go to the formecho route
-    return render_template('testform.html')
+@app.route('/buy/a<aid>', methods = ['GET', 'POST'])
+def buy_album(aid):
+    if request.method == 'GET':
+        conn = dbi.connect()
+        cards = dbact.get_albumcards(conn, aid)
+
+        return render_template('buy_cards.html', cards = cards)
+    else:
+        # next phase
+        pass
+
+
+
+@app.route('/sell/', methods=['GET', 'POST'])
+def sell():
+    if request.method == 'GET':
+        conn = dbi.connect()
+        groups = dbact.get_all_groups(conn)
+        return render_template('sell_group.html', groups = groups)
+    else:
+        gid = request.form.get('group')
+        return redirect(url_for('sell_group', gid = gid))
+
+@app.route('/sell/g<gid>', methods=['GET','POST'])
+def sell_group(gid):
+    if request.method == 'GET':
+        conn = dbi.connect()
+        albums = dbact.get_albums(conn, gid)
+        return render_template('sell_album.html', gid = gid, albums = albums)
+    else:
+        aid = request.form.get('album')
+        return redirect(url_for('sell_album', aid = aid))
+
+@app.route('/sell/a<aid>', methods = ['GET', 'POST'])
+def sell_album(aid):
+    if request.method == 'GET':
+        conn = dbi.connect()
+        cards = dbact.get_albumcards(conn, aid)
+        return render_template('sell_cards.html', cards = cards)
+    else:
+        # next phase
+        pass
+
+
 
 
 @app.before_first_request
 def init_db():
     dbi.cache_cnf()
     # set this local variable to 'wmdb' or your personal or team db
-    db_to_use = 'put_database_name_here_db' 
+    db_to_use = 'yc5_db' 
     dbi.use(db_to_use)
     print('will connect to {}'.format(db_to_use))
 

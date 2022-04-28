@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<h1> Hii</h1>
+<form method=POST action="{{url_for('buy')}}">
+    <label for="group">Available Idol Groups:</label>
+    <select id="group" name="group">
+      <option value="none">Choose One</option>
+      {% for group in groups %}
+        <option value="{{group['gid']}}">{{group['name']}}</option>
+       {% endfor %}
+    </select>
+    <input type="submit" name="submit-btn" value="Confirm">
+</form>
+{% endblock %}
