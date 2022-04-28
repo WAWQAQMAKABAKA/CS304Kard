@@ -5,9 +5,10 @@
 <h1> Hii</h1>
 {% for card in cards %}
 <div class="card">
-  <!-- <img src="../cardpic/10.JPG" class="card-img-top" alt="photo of card {{card['cid']}}"> -->
+  <img src="{{url_for('static', filename = card['filename']) }}" class="card-img-top" alt="photo of card {{card['cid']}}">
   <div class="card-body">
-    <h5 class="card-title">{{card['name']}}</h5>
+    <h5 class="card-title">{{card['name']}} </h5>
+    <p class="card-text">Card ID: {{card['cid']}}</p>
     <p class="card-text">Count: {{card['count']}}</p>
   </div>
 </div>

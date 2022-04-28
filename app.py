@@ -22,6 +22,9 @@ app.secret_key = ''.join([ random.choice(('ABCDEFGHIJKLMNOPQRSTUVXYZ' +
 # This gets us better error messages for certain common request errors
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
+# For carpic folder
+app.config['CARDPIC'] = 'cardpic/'
+
 @app.route('/')
 def index():
     # if 'uid' not in session:
@@ -60,6 +63,7 @@ def buy_album(aid):
     if request.method == 'GET':
         conn = dbi.connect()
         cards = dbact.get_available_albumcards(conn, aid)
+        cards = dbact.card_filepath_generator(cards, app.config['CARDPIC'], '.JPG')
 
         return render_template('buy_cards.html', cards = cards)
     else:
@@ -83,16 +87,19 @@ def sell_group(gid):
     if request.method == 'GET':
         conn = dbi.connect()
         albums = dbact.get_albums(conn, gid)
-        return render_template('sell_album.html', gid = gid, albums = albums)
+        idols = dbact.get_idols(conn, gid)
+        return render_template('sell_album.html', gid = gid, albums = albums, idols = idols)
     else:
         aid = request.form.get('album')
-        return redirect(url_for('sell_album', aid = aid))
+        idid = request.form.get('idol')
+        return redirect(url_for('sell_album', aid = aid, idid = idid))
 
-@app.route('/sell/a<aid>', methods = ['GET', 'POST'])
-def sell_album(aid):
+@app.route('/sell/a<aid>/id<idid>', methods = ['GET', 'POST'])
+def sell_album(aid, idid):
     if request.method == 'GET':
         conn = dbi.connect()
-        cards = dbact.get_all_albumcards(conn, aid)
+        cards = dbact.get_idol_albumcards(conn, aid, idid)
+        cards = dbact.card_filepath_generator(cards, app.config['CARDPIC'], '.JPG')
         return render_template('sell_cards.html', cards = cards)
     else:
         # next phase

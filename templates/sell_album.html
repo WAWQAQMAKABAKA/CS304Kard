@@ -11,6 +11,16 @@
         <option value="{{album['aid']}}">{{album['name']}}</option>
        {% endfor %}
     </select>
+    <p>
+    <label for="idol">Which idol does this card belong to?</label>
+
+    <select id="idol" name="idol">
+      <option value="none">Choose One</option>
+      {% for idol in idols %}
+        <option value="{{idol['idid']}}">{{idol['name']}}</option>
+       {% endfor %}
+    </select>
+  </p>
     <input type="submit" name="submit-btn" value="Confirm">
 </form>
 {% endblock %}
