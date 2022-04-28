@@ -4,7 +4,7 @@
 
 <h1> Hii</h1>
 <form method=POST action="{{url_for('sell')}}">
-    <label for="group">Available Idol Groups:</label>
+    <label for="group">Which idol group does this card belong to?</label>
     <select id="group" name="group">
       <option value="none">Choose One</option>
       {% for group in groups %}

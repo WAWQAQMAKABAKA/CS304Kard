@@ -35,7 +35,6 @@ def login():
     session['uid'] = uid
     return redirect(url_for('index'))
 
-
 @app.route('/buy/', methods=['GET', 'POST'])
 def buy():
     if request.method == 'GET':
@@ -60,7 +59,7 @@ def buy_group(gid):
 def buy_album(aid):
     if request.method == 'GET':
         conn = dbi.connect()
-        cards = dbact.get_albumcards(conn, aid)
+        cards = dbact.get_available_albumcards(conn, aid)
 
         return render_template('buy_cards.html', cards = cards)
     else:
@@ -93,7 +92,7 @@ def sell_group(gid):
 def sell_album(aid):
     if request.method == 'GET':
         conn = dbi.connect()
-        cards = dbact.get_albumcards(conn, aid)
+        cards = dbact.get_all_albumcards(conn, aid)
         return render_template('sell_cards.html', cards = cards)
     else:
         # next phase

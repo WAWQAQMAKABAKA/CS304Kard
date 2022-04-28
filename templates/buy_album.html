@@ -4,7 +4,7 @@
 
 <h1> Hii</h1>
 <form method=POST action="{{url_for('buy_group', gid = gid)}}">
-    <label for="album">Available Albums:</label>
+    <label for="album">Which album do you want?</label>
     <select id="album" name="album">
       <option value="none">Choose One</option>
       {% for album in albums %}
