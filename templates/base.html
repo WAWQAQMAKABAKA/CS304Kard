@@ -7,42 +7,54 @@
     <meta name=author content="Mingyan Claire Tian">
     <title>{{ page_title }}</title>
     <!-- link rel='stylesheet' href="{{url_for('static', filename = 'style.css')}}" -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/theme.css" />
+    <link rel="stylesheet" href="/static/template.css" />
     {% block head_stuff %} {% endblock %}
 </head>
-<body>
+<body data-spy="scroll" data-target="#navbar1" data-offset="60">
+  {% block nav %}
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" id="navbar1">
+        <div class="container">
+            <a class="navbar-brand mr-1 mb-1 mt-0" href="{{ url_for('index') }}">KARD</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse justify-content-center" id="collapsingNavbar">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('buy') }}">Buy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('sell') }}">Sell</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav> 
+  {% endblock %}
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <div id="messages">
   {% for msg in messages %}
-  <p>{{msg}}</p>
+  <!-- <p>{{msg}}</p> -->
+    <div class="alert alert-primary alert-dismissable show fade" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+      <strong>Error: </strong> {{msg}}
+    </div>
   {% endfor %}
 </div>
 {% endif %}
 {% endwith %}
-            
-{% block nav %}
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="{{ url_for('index') }}">KARD</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="{{ url_for('index') }}">Home</a></li>
-      <li><a href="{{ url_for('buy') }}">Buy</a></li>
-      <li><a href="{{ url_for('sell') }}">Sell</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-      <!-- <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li> -->
-      <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-    </ul>
-  </div>
-</nav>
-{% endblock %}
 
 {% block main_content %}
-<h1>Welcome!</h1>
+
 {% endblock %}
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

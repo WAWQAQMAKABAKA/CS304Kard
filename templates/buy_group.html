@@ -2,6 +2,7 @@
 
 {% block main_content %}
 
+<!--
 <h1> Hii</h1>
 <form method=POST action="{{url_for('buy')}}">
     <label for="group">Who are you interested in?</label>
@@ -13,4 +14,29 @@
     </select>
     <input type="submit" name="submit-btn" value="Confirm">
 </form>
+-->
+<p>
+<section id="forms" class="container pb-5">
+  <h1>Buy group</h1>
+  <div class="row">
+    <div class="col-md-12">
+      <form method=POST action="{{url_for('buy')}}">
+        <div class="form-group row">
+          <label class="col-lg-4 col-form-label form-control-label text-muted" for="group">Who are you interested in?</label>
+          <div class="col-lg-4">
+            <select class="form-control" id="group" name="group">
+              <option value="none">Choose One</option>
+              {% for group in groups %}
+                <option value="{{group['gid']}}">{{group['name']}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-lg-4">
+            <input type="submit" class="btn btn-primary mr-2" value="Confirm">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
 {% endblock %}

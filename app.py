@@ -30,7 +30,7 @@ def index():
     # if 'uid' not in session:
     #     return render_template('login.html')
     # else:
-    return render_template('base.html')
+    return render_template('index.html')
 
 @app.route('/login/', methods=['POST'])
 def login():
@@ -112,7 +112,7 @@ def sell_album(aid, idid):
 def init_db():
     dbi.cache_cnf()
     # set this local variable to 'wmdb' or your personal or team db
-    db_to_use = 'yc5_db' 
+    db_to_use = 'mt1_db' 
     dbi.use(db_to_use)
     print('will connect to {}'.format(db_to_use))
 
