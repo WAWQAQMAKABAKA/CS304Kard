@@ -30,7 +30,10 @@ def index():
     # if 'uid' not in session:
     #     return render_template('login.html')
     # else:
-    return render_template('index.html')
+    conn = dbi.connect()
+    cards = dbact.get_most_popular_cards(conn)
+    cards = dbact.card_filepath_generator(cards, app.config['CARDPIC'], '.JPG')
+    return render_template('index.html', cards = cards)
 
 @app.route('/login/', methods=['POST'])
 def login():

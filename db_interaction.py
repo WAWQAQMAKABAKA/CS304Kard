@@ -152,3 +152,25 @@ def card_filepath_generator(cards, path, file_type):
         card['filename'] = path + str(card['cid']) + file_type
     
     return cards
+
+def get_most_popular_cards(conn):
+    """This function gets 8 most popular cards in the database ordered by count
+
+    Args:
+        conn: connection to our database
+
+    Returns:
+        list: a list of dictionary objects, each with keys cid, count, name
+    """    
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        select cid, count, idol.name as name
+        from card
+        inner join idol using (idid)
+        order by count DESC
+        limit 8;
+    '''
+    curs.execute(sql)
+    cards = curs.fetchall()
+
+    return cards
