@@ -35,11 +35,14 @@ def index():
     cards = dbact.card_filepath_generator(cards, app.config['CARDPIC'], '.JPG')
     return render_template('index.html', cards = cards)
 
-@app.route('/login/', methods=['POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
-    uid = request.form.get('uid')
-    session['uid'] = uid
-    return redirect(url_for('index'))
+    if request.method == 'GET':
+        return render_template('login.html')
+    else:
+        uid = request.form.get('uid')
+        session['uid'] = uid
+        return redirect(url_for('index'))
 
 @app.route('/buy/', methods=['GET', 'POST'])
 def buy():
