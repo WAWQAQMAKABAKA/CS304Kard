@@ -1,5 +1,5 @@
 import cs304dbi as dbi
-
+import os
 
 def get_all_groups(conn):
     """This function gets all idol groups in the grouop table
@@ -136,19 +136,62 @@ def get_available_albumcards(conn, aid):
 
     return cards
 
-def card_filepath_generator(cards, path, file_type):
+def get_available_carditem(conn, cid):
+    """This function returns all available card items of a given card
+
+    Args:
+        conn: connection to our database
+        cid (int): the cid of a given card
+
+    Returns:
+        list: a list of dictionary objects, each with keys itid and price
+    """    
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        select itid, price
+        from item
+        where status = 'available' and cid = %s;
+    '''
+    curs.execute(sql, [cid])
+    items = curs.fetchall()
+
+    return items
+
+def get_item_info(conn, itid):
+    """This function returns all the info of a given item
+
+    Args:
+        conn: connection to our database
+        itid (int): the itid of a given item
+
+    Returns:
+        list: a list of dictionary objects, each with keys itid, price, upby, description
+    """    
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        select itid, price, upby, description
+        from item
+        where itid = %s;
+    '''
+    curs.execute(sql, [itid])
+    item = curs.fetchall()
+
+    return item
+
+def filepath_generator(lists, path, file_name, file_type):
     """This function generates a relative path to the file of the given file_type in the given path for each dictionary object in the list
 
     Args:
         cards (list): a list of dictionary objects
         path (str): path to the folder that contains the file
+        file_name (str): key name for which the value is the filename
         file_type (str): file type, eg. '.JPG'
 
     Returns:
         list: a list of updated dictionary objects
     """    
 
-    for card in cards:
-        card['filename'] = path + str(card['cid']) + file_type
+    for l in lists:
+        l['path'] = os.path.join(path, str(l[file_name]) + file_type)
     
-    return cards
+    return lists

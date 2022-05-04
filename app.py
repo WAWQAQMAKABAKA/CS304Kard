@@ -3,6 +3,7 @@ from flask import (Flask, render_template, make_response, url_for, request,
 from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
+
 # one or the other of these. Defaults to MySQL (PyMySQL)
 # change comment characters to switch to SQLite
 
@@ -22,8 +23,9 @@ app.secret_key = ''.join([ random.choice(('ABCDEFGHIJKLMNOPQRSTUVXYZ' +
 # This gets us better error messages for certain common request errors
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
-# For carpic folder
-app.config['CARDPIC'] = 'cardpic/'
+# For pic folder
+app.config['CARDPIC'] = 'cardpic'
+app.config['UPLOADS'] = 'uploads'
 
 @app.route('/')
 def index():
@@ -63,13 +65,38 @@ def buy_album(aid):
     if request.method == 'GET':
         conn = dbi.connect()
         cards = dbact.get_available_albumcards(conn, aid)
-        cards = dbact.card_filepath_generator(cards, app.config['CARDPIC'], '.JPG')
+        cards = dbact.filepath_generator(cards, app.config['CARDPIC'],'cid', '.JPG')
 
-        return render_template('buy_cards.html', cards = cards)
+        return render_template('buy_cards.html', aid = aid, cards = cards)
     else:
-        # next phase
-        pass
+        cid = request.form.get('card')
+        return redirect(url_for('buy_card', cid = cid))
 
+@app.route('/buy/c<cid>', methods=['GET','POST'])
+def buy_card(cid):
+    if request.method == 'GET':
+        conn = dbi.connect()
+        items = dbact.get_available_carditem(conn, cid)
+        items = dbact.filepath_generator(items, app.config['UPLOADS'], 'itid', '.jpg')
+
+        return render_template('buy_items.html', cid = cid, items = items)
+    else:
+        itid = request.form.get('item')
+        return redirect(url_for('buy_item', itid = itid))
+
+@app.route('/buy/it<itid>', methods=['GET','POST'])
+def buy_item(itid):
+    if request.method == 'GET':
+        conn = dbi.connect()
+        item = dbact.get_item_info(conn, itid)
+        item = dbact.filepath_generator(items, app.config['UPLOADS'], 'itid', '.jpg')
+        item = item[0]
+
+        return render_template('buy_item_info.html', itid = itid, item = item)
+    else:
+        # sql 
+        # return redirect(url_for("transaction_success"))
+        pass
 
 
 @app.route('/sell/', methods=['GET', 'POST'])
@@ -99,20 +126,18 @@ def sell_album(aid, idid):
     if request.method == 'GET':
         conn = dbi.connect()
         cards = dbact.get_idol_albumcards(conn, aid, idid)
-        cards = dbact.card_filepath_generator(cards, app.config['CARDPIC'], '.JPG')
+        cards = dbact.filepath_generator(cards, app.config['CARDPIC'], 'cid', '.JPG')
         return render_template('sell_cards.html', cards = cards)
     else:
         # next phase
         pass
 
 
-
-
 @app.before_first_request
 def init_db():
     dbi.cache_cnf()
     # set this local variable to 'wmdb' or your personal or team db
-    db_to_use = 'mt1_db' 
+    db_to_use = 'kard_db' 
     dbi.use(db_to_use)
     print('will connect to {}'.format(db_to_use))
 
