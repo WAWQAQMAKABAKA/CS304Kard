@@ -19,27 +19,31 @@ Item:
 -   boughtby(uid) -> can be null -> foreign key reference from table user
 -   price (float)
 -	status (either “available” or “sold”)
--	description(how new it is, condition of the card) 
+-	description(how new it is, condition of the card)
+
 User:
 -	uid(user id)
 -	name(username)
 -	phnum(phone number)
--	address 
+-	address
+
 Card:
 -	cid(card id)-> jpg name is cid.jpg
 -	count(how many are available to sell)
 -	gid(group id)->foreign key reference from table group
 -	aid(album id)->foreign key reference from table album
 -	idid (idol id)->foreign key reference from table idol
+
 Idol:
 -	idid(idol id)
 -	gid(group id)->foreign key reference from table group
 -	name(name of idol)
+
 Album:
 -	aid(album id)
 -	gid(group id)->foreign key reference from table group
 -	name(name of the album)
+
 Group:
 -	gid(group id)
 -	name(name of the group)
-

@@ -2,18 +2,37 @@
 
 {% block main_content %}
 
-<h1>Your Item ID: {{item['itid']}}</h1>
-<h2>{{card['idname']}}</h2>
-<h3>Album: {{card['aname']}}</h3>
-<h3>Idol Group: {{card['gname']}}</h3>
-
-<p>Uploaded Picture: </p>
-<p> <img src="{{url_for('static', filename = pathname)}}" alt="photo of item {{item['itid']}}"></p>
-<p>Price: {{item['price']}}</p>
-<p>Description: {{item['description']}}</p>
-
-<form method=POST action="{{url_for('success')}}">
-    <p><input type="submit" value="Confirm" class="btn btn-primary mr-2"></p>
-</form>
+<p>
+<section id="item-info" class="container pb-5">
+    <h1>Review Card Information</h1>
+    <p></p>
+    <div class="d-flex flex-column justify-content-center">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Uploaded Picture: </h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card border-primary">
+                    <img class="card-img-bottom" src="{{url_for('static', filename = pathname)}}" alt="photo of item {{item['itid']}}">
+                </div>
+            </div>
+            <div class="col-md d-none d-lg-block">
+                <h3>Your Item ID: {{item['itid']}}</h3>
+                <p></p>
+                <h4>{{card['idname']}}</h4>
+                <h4>Album: {{card['aname']}}</h4>
+                <h4>Idol Group: {{card['gname']}}</h4>
+                <h4>Price: {{item['price']}}</h4>
+                <h4>Description: {{item['description']}}</h4>
+                <p></p>
+                <form method=POST action="{{url_for('success')}}">
+                    <p><input type="submit" value="Confirm" class="btn btn-primary btn-md mr-2" style="width:100px"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}

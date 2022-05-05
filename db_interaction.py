@@ -356,3 +356,20 @@ def change_card_count(conn,cid, increment):
         '''
     curs.execute(sql,[cid])
     conn.commit()
+
+def check_uid(conn, uid):
+    """This function checks if the user input uid is valid
+    Args:
+        conn:connection to our database
+        uid(int): the uid of a user
+
+    Returns:
+        boolean: true if the user exists in the database, false otherwise
+    """
+    curs = dbi.dict_cursor(conn)
+    sql = '''select * from user where uid=%s
+    '''
+    curs.execute(sql,[uid])
+    result = curs.fetchall()
+    return len(result) == 1
+    

@@ -31,7 +31,7 @@ app.config['MAX_CONTENT_LENGTH'] = 1*1024*1024 # 1 MB
 @app.route('/')
 def index():
     if 'uid' not in session:
-        return render_template('login.html')
+        return redirect(url_for('login'))
     else:
         conn = dbi.connect()
         cards = dbact.get_most_popular_cards(conn)
@@ -43,10 +43,13 @@ def login():
     if request.method == 'GET':
         return render_template('login.html')
     else:
-        uid = request.form.get('uid')
-        session['uid'] = uid
         conn = dbi.connect()
-        session['username'] = dbact.get_username(conn, uid)
+        uid = request.form.get('uid')
+        if dbact.check_uid(conn, uid):
+            session['uid'] = uid
+            session['username'] = dbact.get_username(conn, uid)
+        else:
+            flash("Please log in with a valid user ID!")
         return redirect(url_for('index'))
 
 @app.route('/buy/', methods=['GET', 'POST'])
@@ -54,7 +57,12 @@ def buy():
     if request.method == 'GET':
         conn = dbi.connect()
         groups = dbact.get_all_groups(conn)
-        return render_template('buy_group.html', groups = groups, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('buy_group.html', groups = groups, uid=uid, usrname=session.get('username'))
     else:
         gid = request.form.get('group')
         return redirect(url_for('buy_group', gid = gid))
@@ -64,7 +72,12 @@ def buy_group(gid):
     if request.method == 'GET':
         conn = dbi.connect()
         albums = dbact.get_albums(conn, gid)
-        return render_template('buy_album.html', gid = gid, albums = albums, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('buy_album.html', gid = gid, albums = albums, uid=uid, usrname=session.get('username'))
     else:
         aid = request.form.get('album')
         return redirect(url_for('buy_album', aid = aid))
@@ -75,7 +88,12 @@ def buy_album(aid):
         conn = dbi.connect()
         cards = dbact.get_available_albumcards(conn, aid)
         cards = dbact.filepath_generator(cards, app.config['CARDPIC'],'cid', '.JPG')
-        return render_template('buy_cards.html', aid = aid, cards = cards, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('buy_cards.html', aid = aid, cards = cards, uid=uid, usrname=session.get('username'))
     else:
         cid = request.form.get('card')
         return redirect(url_for('buy_card', cid = cid))
@@ -86,8 +104,12 @@ def buy_card(cid):
         conn = dbi.connect()
         items = dbact.get_available_carditem(conn, cid)
         items = dbact.filepath_generator(items, app.config['UPLOADS'], 'itid', '.jpg')
-
-        return render_template('buy_items.html', cid = cid, items = items, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('buy_items.html', cid = cid, items = items, uid=uid, usrname=session.get('username'))
     else:
         itid = request.form.get('item')
         return redirect(url_for('buy_item', itid = itid))
@@ -99,8 +121,12 @@ def buy_item(itid):
         item = dbact.get_item_info(conn, itid)
         item = dbact.filepath_generator(item, app.config['UPLOADS'], 'itid', '.jpg')
         item = item[0]
-
-        return render_template('buy_item_info.html', itid = itid, item = item, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('buy_item_info.html', itid = itid, item = item, uid=uid, usrname=session.get('username'))
     else:
         conn = dbi.connect()
         dbact.update_buy_card(conn, itid, boughtby=session.get('uid'))
@@ -113,7 +139,12 @@ def sell():
     if request.method == 'GET':
         conn = dbi.connect()
         groups = dbact.get_all_groups(conn)
-        return render_template('sell_group.html', groups = groups, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('sell_group.html', groups = groups, uid=uid, usrname=session.get('username'))
     else:
         gid = request.form.get('group')
         return redirect(url_for('sell_group', gid = gid))
@@ -124,7 +155,12 @@ def sell_group(gid):
         conn = dbi.connect()
         albums = dbact.get_albums(conn, gid)
         idols = dbact.get_idols(conn, gid)
-        return render_template('sell_album.html', gid = gid, albums = albums, idols = idols, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('sell_album.html', gid = gid, albums = albums, idols = idols, uid=uid, usrname=session.get('username'))
     else:
         aid = request.form.get('album')
         idid = request.form.get('idol')
@@ -136,7 +172,12 @@ def sell_album(aid, idid):
         conn = dbi.connect()
         cards = dbact.get_idol_albumcards(conn, aid, idid)
         cards = dbact.filepath_generator(cards, app.config['CARDPIC'],'cid', '.JPG')
-        return render_template('sell_cards.html', aid = aid, idid = idid, cards = cards, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('sell_cards.html', aid = aid, idid = idid, cards = cards, uid=uid, usrname=session.get('username'))
     else:
         cid = request.form.get('card')
         return redirect(url_for('sell_card', cid = cid))
@@ -146,7 +187,12 @@ def sell_card(cid):
     if request.method == 'GET':
         conn = dbi.connect()
         card = dbact.get_card_info(conn, cid)
-        return render_template('sell_item_info.html', card = card, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('sell_item_info.html', card = card, uid=uid, usrname=session.get('username'))
     else:
         description = request.form.get('description')
         price = request.form.get('price')
@@ -160,7 +206,12 @@ def upload_pic(cid, itid):
     if request.method == "GET":
         conn = dbi.connect()
         card = dbact.get_card_info(conn, cid)
-        return render_template('sell_upload_pic.html', itid = itid, card = card, uid=session.get('uid'), usrname=session.get('username'))
+        uid = session.get('uid')
+        if uid == None:
+            flash('Please log in first!')
+            return redirect(url_for('login'))
+        else:
+            return render_template('sell_upload_pic.html', itid = itid, card = card, uid=uid, usrname=session.get('username'))
     else:
         try:
             f = request.files['pic']
@@ -170,7 +221,7 @@ def upload_pic(cid, itid):
             conn = dbi.connect()
             card = dbact.get_card_info(conn, cid)
             item = dbact.get_item_info(conn, itid)
-            return render_template("sell_review_info.html", item = item[0], card = card, pathname = pathname)
+            return render_template("sell_review_info.html", item = item[0], card = card, pathname = pathname, uid=session.get('uid'), usrname=session.get('username'))
 
         except Exception as err:
             flash('Upload failed {why}'.format(why=err))
@@ -178,7 +229,12 @@ def upload_pic(cid, itid):
         
 @app.route('/success', methods=['GET', "POST"])
 def success():
-    return render_template('transaction_success.html', uid=session.get('uid'), usrname=session.get('username'))
+    uid = session.get('uid')
+    if uid == None:
+        flash('Please log in first!')
+        return redirect(url_for('login'))
+    else:
+        return render_template('transaction_success.html', uid=uid, usrname=session.get('username'))
 
 @app.before_first_request
 def init_db():
