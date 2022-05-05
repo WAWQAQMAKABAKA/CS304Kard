@@ -58,7 +58,7 @@ def buy():
     else:
         gid = request.form.get('group')
         uid = session.get('uid')
-        return redirect(url_for('buy_group', gid = gid, uid=session.get('uid'), usrname=session.get('username')))
+        return redirect(url_for('buy_group', gid = gid))
 
 @app.route('/buy/g<gid>', methods=['GET','POST'])
 def buy_group(gid):
@@ -70,7 +70,7 @@ def buy_group(gid):
     else:
         aid = request.form.get('album')
         uid = session.get('uid')
-        return redirect(url_for('buy_album', aid = aid, uid=session.get('uid'), usrname=session.get('username')))
+        return redirect(url_for('buy_album', aid = aid))
 
 @app.route('/buy/a<aid>', methods = ['GET', 'POST'])
 def buy_album(aid):
@@ -104,8 +104,11 @@ def buy_item(itid):
         item = dbact.filepath_generator(item, app.config['UPLOADS'], 'itid', '.jpg')
         item = item[0]
 
-        return render_template('buy_item_info.html', itid = itid, item = item)
+        return render_template('buy_item_info.html', itid = itid, item = item, uid=session.get('uid'), usrname=session.get('username'))
     else:
+        conn = dbi.connect()
+        dbact.update_buy_card(conn, itid, boughtby=session.get('uid'))
+        dbact.change_card_count(conn, cid, False)
         return redirect(url_for("success"))
 
 @app.route('/sell/', methods=['GET', 'POST'])
@@ -118,7 +121,7 @@ def sell():
     else:
         gid = request.form.get('group')
         uid = session.get('uid')
-        return redirect(url_for('sell_group', gid = gid, uid=session.get('uid'), usrname=session.get('username')))
+        return redirect(url_for('sell_group', gid = gid))
 
 @app.route('/sell/g<gid>', methods=['GET','POST'])
 def sell_group(gid):
@@ -131,8 +134,7 @@ def sell_group(gid):
     else:
         aid = request.form.get('album')
         idid = request.form.get('idol')
-        uid = session.get('uid')
-        return redirect(url_for('sell_album', aid = aid, idid = idid, uid=session.get('uid'), usrname=session.get('username')))
+        return redirect(url_for('sell_album', aid = aid, idid = idid))
 
 @app.route('/sell/a<aid>/id<idid>', methods = ['GET', 'POST'])
 def sell_album(aid, idid):
@@ -140,7 +142,7 @@ def sell_album(aid, idid):
         conn = dbi.connect()
         cards = dbact.get_idol_albumcards(conn, aid, idid)
         cards = dbact.filepath_generator(cards, app.config['CARDPIC'],'cid', '.JPG')
-        return render_template('sell_cards.html', aid = aid, idid = idid, cards = cards)
+        return render_template('sell_cards.html', aid = aid, idid = idid, cards = cards, uid=session.get('uid'), usrname=session.get('username'))
     else:
         cid = request.form.get('card')
         return redirect(url_for('sell_card', cid = cid))
@@ -150,13 +152,13 @@ def sell_card(cid):
     if request.method == 'GET':
         conn = dbi.connect()
         card = dbact.get_card_info(conn, cid)
-        return render_template('sell_item_info.html', card = card)
+        return render_template('sell_item_info.html', card = card, uid=session.get('uid'), usrname=session.get('username'))
     else:
         description = request.form.get('description')
-        price = request.form.get('price')
-
-        itid = 10
-
+        price = float(request.form.get('price'))
+        conn = dbi.connect()
+        itid = dbact.update_sell_card(conn, cid, session.get('uid'), price, description)
+        dbact.change_card_count(conn, cid, True)
         return redirect(url_for("upload_pic", cid = cid, itid = itid))
 
 @app.route('/sell/c<cid>/it<itid>', methods=['GET','POST'])
@@ -164,15 +166,13 @@ def upload_pic(cid, itid):
     if request.method == "GET":
         conn = dbi.connect()
         card = dbact.get_card_info(conn, cid)
-        return render_template('sell_upload_pic.html', itid = itid, card = card)
+        return render_template('sell_upload_pic.html', itid = itid, card = card, uid=session.get('uid'), usrname=session.get('username'))
     else:
         return redirect("success")
 
-        
-
 @app.route('/success', methods=['GET'])
 def success():
-    return render_template('transaction_success.html')
+    return render_template('transaction_success.html', uid=session.get('uid'), usrname=session.get('username'))
 
 @app.before_first_request
 def init_db():
