@@ -17,19 +17,21 @@
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" id="navbar1">
         <div class="container">
             <a class="navbar-brand mr-1 mb-1 mt-0" href="{{ url_for('index') }}">KARD</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('buy') }}">Buy</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('sell') }}">Sell</a>
+              </li>
+            </ul>
             <div class="navbar-collapse collapse justify-content-center" id="collapsingNavbar">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('buy') }}">Buy</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('sell') }}">Sell</a>
+                      <a class="nav-link active">Logged in as <span id="login_uid">{{usrname}} (UID: {{uid}})</span></a> 
                     </li>
                 </ul>
             </div>

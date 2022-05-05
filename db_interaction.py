@@ -174,3 +174,25 @@ def get_most_popular_cards(conn):
     cards = curs.fetchall()
 
     return cards
+
+def get_username(conn, uid):
+    """This function retrieves the username of the user specified by the uid
+
+    Args:
+        conn: connection to our database
+        uid: user ID of this user, serve as unique identifier
+
+    Returns:
+        usrname: a dictionary containing the name of this user
+    """    
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        select name from user
+        where uid=%s;
+    '''
+    curs.execute(sql, [uid])
+    usrname = curs.fetchone()
+    if usrname is not None:
+        usrname = usrname.get('name')
+
+    return usrname
