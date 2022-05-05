@@ -1,14 +1,38 @@
 {% extends "base.html" %}
 
 {% block main_content %}
-
-<h1>Card with more information</h1>
+<!--
+<h1>More Information: Item {{itid}}</h1>
 <form method=POST action="{{url_for('buy_item', itid = itid)}}">
   <img src="{{url_for('static', filename = item['path']) }}" alt="photo of item {{item['itid']}}">
-  <p>Description: {{item['description']}}</ >
+  <p>Description: {{item['description']}}</p>
   <p>Price: {{item['price']}}</p>
-  <p>Seller userid: {{item['upby']}}</p> <!--join table user, show users name-->
+  <p>Seller userid: {{item['upby']}}</p> --><!--join table user, show users name--><!--
   <input type="submit" class="btn btn-primary mr-2" value="Buy">
   </form>
+-->
+<p>
+<section id="item-info" class="container pb-5">
+  <h1>More Information</h1>
+  <p></p>
+  <div class="d-flex flex-column justify-content-center">
+    <form method=POST action="{{url_for('buy_item', itid = itid)}}">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card border-primary h-100">
+            <img class="card-img-top" src="{{url_for('static', filename = item['path']) }}" alt="photo of item {{item['itid']}}">
+          </div>
+        </div>
+        <div class="col-md d-none d-lg-block">
+            <h4>Item {{itid}}</h4>
+            <p>Description: {{item['description']}}</p>
+            <p>Price: {{item['price']}}</p>
+            <p>Seller userid: {{item['upby']}}</p> <!--join table user, show users name-->
+            <input type="submit" class="btn btn-primary btn-md mr-1" value="Buy" style="width:100px">
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
 
 {% endblock %}

@@ -2,15 +2,25 @@
 
 {% block main_content %}
 
-<h1>Enter Card Information</h1>
-<h2>{{card['idname']}}</h2>
-<h3>Album: {{card['aname']}}</h3>
-<h3>Idol Group: {{card['gname']}}</h3>
-
-<form method=POST action="{{url_for('sell_card', cid = card['cid'])}}">
-    <p><label>Description: <input type="text" name="description" placeholder="Type Here..."></label></p>
-    <p><label>Price: <input type = "number" min="0"></label></p>
-    <p><input type="submit" value="Next" class="btn btn-primary mr-2"></p>
-
-</form>
+<p>
+<section id="item-info" class="container pb-5">
+    <h1>Enter Card Information</h1>
+    <p></p>
+    <div class="d-flex flex-column justify-content-center">
+        <form method=POST action="{{url_for('sell_card', cid = card['cid'])}}">
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>{{card['idname']}}</h2>
+                    <h3>Album: {{card['aname']}}</h3>
+                    <h3>Idol Group: {{card['gname']}}</h3>
+                </div>
+                <div class="col-md d-none d-lg-block">
+                    <p><label>Description: <input type="text" name="description" placeholder="Type Here..."></label></p>
+                    <p><label>Price: <input type = "number" min="0"></label></p>
+                    <p><input type="submit" value="Next" class="btn btn-primary btn-md mr-2" style="width:100px"></p>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
 {% endblock %}
