@@ -7,15 +7,10 @@
 <h3>Album: {{card['aname']}}</h3>
 <h3>Idol Group: {{card['gname']}}</h3>
 
-<form method=POST action="{{url_for('sell_card', cid = card['cid'])}}" enctype="multipart/form-data">
+<form method=POST action="{{url_for('upload_pic', cid = card['cid'], itid = itid)}}" enctype="multipart/form-data">
     <p><label>Picture of Your Card: <input type="file" name="pic"></label></p>
     <p><input type="submit" value="Upload" class="btn btn-primary mr-2"></p>
 
 </form>
-
-<!-- {% if nm != '' and src != '' %}
-<p>Last upload: {{nm}}</p>
-<p> <img src="{{src}}"></p>
-{% endif %} -->
 
 {% endblock %}

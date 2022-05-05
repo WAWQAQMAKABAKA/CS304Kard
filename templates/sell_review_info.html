@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<h1>Your Item ID: {{item['itid']}}</h1>
+<h2>{{card['idname']}}</h2>
+<h3>Album: {{card['aname']}}</h3>
+<h3>Idol Group: {{card['gname']}}</h3>
+
+<p>Uploaded Picture: </p>
+<p> <img src="{{url_for('static', filename = pathname)}}" alt="photo of item {{item['itid']}}"></p>
+<p>Price: {{item['price']}}</p>
+<p>Description: {{item['description']}}</p>
+
+<form method=POST action="{{url_for('success')}}">
+    <p><input type="submit" value="Confirm" class="btn btn-primary mr-2"></p>
+</form>
+
+{% endblock %}

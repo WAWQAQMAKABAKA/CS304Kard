@@ -243,6 +243,27 @@ def get_most_popular_cards(conn):
 
     return cards
 
+def itid_to_cid(conn, itid):
+    """This function returns cid given itid
+
+    Args:
+        conn: connection to our database
+        itid (int): itid of the given item
+
+    Returns:
+        int: cid of the given item
+    """    
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        select cid
+        from item
+        where itid = %s;
+    '''
+    curs.execute(sql, [itid])
+    item = curs.fetchone()
+
+    return item['cid']
+
 def get_username(conn, uid):
     """This function retrieves the username of the user specified by the uid
 
@@ -266,7 +287,7 @@ def get_username(conn, uid):
     return usrname
 
 # Database Change
-def change_item_status(conn,itid,boughtby):
+def update_buy_card(conn,itid,boughtby):
     """This function updates the current item list
 
     Args:
@@ -283,9 +304,7 @@ def change_item_status(conn,itid,boughtby):
         where itid = %s;
     ''' 
     curs.execute(sql, [boughtby,itid])
-    item = curs.fetchall()
-
-    return item
+    conn.commit()
 
 def update_sell_card(conn, cid, upby, price, description):
     '''This function add new card selling info into the existed database
@@ -301,13 +320,39 @@ def update_sell_card(conn, cid, upby, price, description):
         list: a list of dictionary object
     '''
     curs = dbi.dict_cursor(conn)
-    sql = '''
+    sql1 = '''
         insert into item(cid, upby, price, status, description) 
         values(%s, %s, %s, "available", %s);
-
-        select LAST_INSERT_ID() as itid;
     '''
-    curs.execute(sql,[cid, upby, price, description])
+    curs.execute(sql1, [cid, upby, price, description])
+    conn.commit()
+
+    sql2 = "select LAST_INSERT_ID() as itid;"
+    curs.execute(sql2)
     item = curs.fetchone()
 
     return item['itid']
+
+def change_card_count(conn,cid, increment):
+    """This function updates the current item list
+
+    Args:
+        conn:connection to our database
+        cid(int): the cid of a given item
+
+    Returns:
+        list: a list of dictionary object
+    """
+    curs = dbi.dict_cursor(conn)
+    if increment == True: #on sell page
+        sql = '''
+        update card set count = count+1
+        where cid = %s;
+        '''
+    else: # on buy page
+        sql = '''
+        update card set count = count-1
+        where cid = %s;
+        '''
+    curs.execute(sql,[cid])
+    conn.commit()

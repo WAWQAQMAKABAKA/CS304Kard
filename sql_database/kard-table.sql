@@ -1,4 +1,4 @@
-use mt1_db;
+use kard_db;
 
 drop table if exists item;
 drop table if exists user;
