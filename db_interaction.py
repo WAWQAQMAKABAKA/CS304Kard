@@ -150,7 +150,8 @@ def get_available_carditem(conn, cid):
     sql = '''
         select itid, price
         from item
-        where status = 'available' and cid = %s;
+        where status = 'available' and cid = %s
+        order by price;
     '''
     curs.execute(sql, [cid])
     items = curs.fetchall()
@@ -177,6 +178,38 @@ def get_item_info(conn, itid):
     item = curs.fetchall()
 
     return item
+
+def get_card_info(conn, cid):
+    """This function returns all relevant information of a given card
+
+    Args:
+        conn: connection to our database
+        cid (int): the cid of a given card
+
+    Returns:
+        dict: a dictionary object, with keys cid, idname, aname, gname
+    """    
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        select cid, idol.name as idname, album.name as aname, group.name as gname
+        from card
+            inner join `group` using (gid)
+            inner join idol using (idid)
+            inner join album using (aid)
+        where cid = %s;
+    '''
+    curs.execute(sql, [cid])
+    card = curs.fetchone()
+
+    return card
+
+def update_sell_card(conn):
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+    
+    '''
+    curs.execute(sql, [nm, filename, filename])
+    conn.commit()
 
 def filepath_generator(lists, path, file_name, file_type):
     """This function generates a relative path to the file of the given file_type in the given path for each dictionary object in the list

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<h1>Enter Card Information</h1>
+<h2>{{card['idname']}}</h2>
+<h3>Album: {{card['aname']}}</h3>
+<h3>Idol Group: {{card['gname']}}</h3>
+
+<form method=POST action="{{url_for('sell_card', cid = card['cid'])}}">
+    <p><label>Description: <input type="text" name="description" placeholder="Type Here..."></label></p>
+    <p><label>Price: <input type = "number" min="0"></label></p>
+    <p><input type="submit" value="Next" class="btn btn-primary mr-2"></p>
+
+</form>
+{% endblock %}

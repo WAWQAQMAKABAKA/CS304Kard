@@ -65,7 +65,7 @@ CREATE TABLE user (
 ENGINE=InnoDB;
 
 CREATE TABLE item (
-    itid int not null,
+    itid int not null auto_increment,
     cid int not null,
     upby int not null,
     price float not null,

@@ -2,4 +2,13 @@
 
 {% block main_content %}
 
+<h1>Card with more information</h1>
+<form method=POST action="{{url_for('buy_item', itid = itid)}}">
+  <img src="{{url_for('static', filename = item['path']) }}" alt="photo of item {{item['itid']}}">
+  <p>Description: {{item['description']}}</ >
+  <p>Price: {{item['price']}}</p>
+  <p>Seller userid: {{item['upby']}}</p> <!--join table user, show users name-->
+  <input type="submit" class="btn btn-primary mr-2" value="Buy">
+  </form>
+
 {% endblock %}

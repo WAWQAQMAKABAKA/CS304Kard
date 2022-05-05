@@ -26,6 +26,7 @@ app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 # For pic folder
 app.config['CARDPIC'] = 'cardpic'
 app.config['UPLOADS'] = 'uploads'
+app.config['MAX_CONTENT_LENGTH'] = 1*1024*1024 # 1 MB
 
 @app.route('/')
 def index():
@@ -89,15 +90,12 @@ def buy_item(itid):
     if request.method == 'GET':
         conn = dbi.connect()
         item = dbact.get_item_info(conn, itid)
-        item = dbact.filepath_generator(items, app.config['UPLOADS'], 'itid', '.jpg')
+        item = dbact.filepath_generator(item, app.config['UPLOADS'], 'itid', '.jpg')
         item = item[0]
 
         return render_template('buy_item_info.html', itid = itid, item = item)
     else:
-        # sql 
-        # return redirect(url_for("transaction_success"))
-        pass
-
+        return redirect(url_for("success"))
 
 @app.route('/sell/', methods=['GET', 'POST'])
 def sell():
@@ -126,12 +124,40 @@ def sell_album(aid, idid):
     if request.method == 'GET':
         conn = dbi.connect()
         cards = dbact.get_idol_albumcards(conn, aid, idid)
-        cards = dbact.filepath_generator(cards, app.config['CARDPIC'], 'cid', '.JPG')
-        return render_template('sell_cards.html', cards = cards)
+        cards = dbact.filepath_generator(cards, app.config['CARDPIC'],'cid', '.JPG')
+        return render_template('sell_cards.html', aid = aid, idid = idid, cards = cards)
     else:
-        # next phase
-        pass
+        cid = request.form.get('card')
+        return redirect(url_for('sell_card', cid = cid))
 
+@app.route('/sell/c<cid>', methods=['GET','POST'])
+def sell_card(cid):
+    if request.method == 'GET':
+        conn = dbi.connect()
+        card = dbact.get_card_info(conn, cid)
+        return render_template('sell_item_info.html', card = card)
+    else:
+        description = request.form.get('description')
+        price = request.form.get('price')
+
+        itid = 10
+
+        return redirect(url_for("upload_pic", cid = cid, itid = itid))
+
+@app.route('/sell/c<cid>/it<itid>', methods=['GET','POST'])
+def upload_pic(cid, itid):
+    if request.method == "GET":
+        conn = dbi.connect()
+        card = dbact.get_card_info(conn, cid)
+        return render_template('sell_upload_pic.html', itid = itid, card = card)
+    else:
+        return redirect("success")
+
+        
+
+@app.route('/success', methods=['GET'])
+def success():
+    return render_template('transaction_success.html')
 
 @app.before_first_request
 def init_db():

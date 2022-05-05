@@ -1,6 +1,15 @@
 A basic app.py with some example routes, a static folder with a css
 file in it, and a templates folder with some files.
 
+Basic Setup Codes:
+source venv/bin/activate
+
+cd sql_database
+dos2unix *.csv
+mysql
+source kard-table.sql
+source kard-load-data.sql
+
 Database Attributes:
 
 Item:
