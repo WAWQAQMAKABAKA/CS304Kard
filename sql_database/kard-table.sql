@@ -1,7 +1,9 @@
+<<<<<<< HEAD
 use mt1_db;
+=======
+use kard_db;
+>>>>>>> 285e48eaf6c0f3d87bfd641e0ddb31710aefe15c
 
-drop table if exists buy;
-drop table if exists sell;
 drop table if exists item;
 drop table if exists user;
 drop table if exists card;
@@ -69,39 +71,48 @@ ENGINE=InnoDB;
 CREATE TABLE item (
     itid int not null,
     cid int not null,
-    status enum('available','sold'),
-    description varchar(100),
+    upby int not null,
+    price float not null,
+    `status` enum('available','sold'),
+    `description` varchar(100),
+    boughtby int,
     PRIMARY KEY (itid),
     foreign key (cid) references card(cid) 
         on update restrict
-        on delete restrict
-)
-ENGINE=InnoDB;
-
-CREATE TABLE sell (
-    uid int not null,
-    itid int not null,
-    price int not null,
-    PRIMARY KEY (uid,itid),
-    foreign key (uid) references user(uid) 
+        on delete restrict,
+    foreign key (upby) references user(uid) 
         on update restrict
         on delete restrict,
-    foreign key (itid) references item(itid) 
+    foreign key (boughtby) references user(uid) 
         on update restrict
         on delete restrict
 )
 ENGINE=InnoDB;
 
-CREATE TABLE buy (
-    uid int not null,
-    itid int not null,
-    price int not null,
-    PRIMARY KEY (uid, itid),
-    foreign key (uid) references user(uid) 
-        on update restrict
-        on delete restrict,
-    foreign key (itid) references item(itid) 
-        on update restrict
-        on delete restrict
-)
-ENGINE=InnoDB;
+-- CREATE TABLE sell (
+--     uid int not null,
+--     itid int not null,
+--     price int not null,
+--     PRIMARY KEY (uid,itid),
+--     foreign key (uid) references user(uid) 
+--         on update restrict
+--         on delete restrict,
+--     foreign key (itid) references item(itid) 
+--         on update restrict
+--         on delete restrict
+-- )
+-- ENGINE=InnoDB;
+
+-- CREATE TABLE buy (
+--     uid int not null,
+--     itid int not null,
+--     price int not null,
+--     PRIMARY KEY (uid, itid),
+--     foreign key (uid) references user(uid) 
+--         on update restrict
+--         on delete restrict,
+--     foreign key (itid) references item(itid) 
+--         on update restrict
+--         on delete restrict
+-- )
+-- ENGINE=InnoDB;

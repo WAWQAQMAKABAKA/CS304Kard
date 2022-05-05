@@ -1,0 +1,26 @@
+itid,cid,upby,price,status,description
+1,1,1,4,available,brand new
+2,10,2,6,available,brand new
+3,10,3,5.5,available,worn
+4,25,3,5,available,brand new
+5,40,3,4.9,available,used
+6,45,3,4.9,available,used
+7,45,5,6,available,used
+8,45,5,6,available,brand new
+9,45,6,6,available,worn
+10,110,6,4.9,available,brand new
+11,112,7,5.5,available,worn
+12,112,7,5.5,available,brand new
+13,112,7,5.5,available,brand new
+14,120,7,5.5,available,brand new
+15,123,7,4,available,worn
+16,130,7,4,available,used
+17,140,7,4,available,used
+18,140,7,5.9,available,brand new
+19,141,7,5.9,available,worn
+20,142,7,5.9,available,brand new
+21,170,7,5.9,available,worn
+22,200,9,5.9,available,used
+23,200,10,6,available,brand new
+24,220,10,6,available,brand new
+25,229,10,4,available,brand new
