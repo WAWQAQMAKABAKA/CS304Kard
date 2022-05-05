@@ -243,6 +243,27 @@ def get_most_popular_cards(conn):
 
     return cards
 
+def itid_to_cid(conn, itid):
+    """This function returns cid given itid
+
+    Args:
+        conn: connection to our database
+        itid (int): itid of the given item
+
+    Returns:
+        int: cid of the given item
+    """    
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        select cid
+        from item
+        where itid = %s;
+    '''
+    curs.execute(sql, [itid])
+    item = curs.fetchone()
+
+    return item['cid']
+
 def get_username(conn, uid):
     """This function retrieves the username of the user specified by the uid
 
@@ -322,8 +343,8 @@ def change_card_count(conn,cid, increment):
     Returns:
         list: a list of dictionary object
     """
+    curs = dbi.dict_cursor(conn)
     if increment == True: #on sell page
-        curs = dbi.dict_cursor(conn)
         sql = '''
         update card set count = count+1
         where cid = %s;

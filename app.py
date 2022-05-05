@@ -104,6 +104,7 @@ def buy_item(itid):
     else:
         conn = dbi.connect()
         dbact.update_buy_card(conn, itid, boughtby=session.get('uid'))
+        cid = dbact.itid_to_cid(conn, itid)
         dbact.change_card_count(conn, cid, False)
         return redirect(url_for("success"))
 
@@ -148,7 +149,7 @@ def sell_card(cid):
         return render_template('sell_item_info.html', card = card, uid=session.get('uid'), usrname=session.get('username'))
     else:
         description = request.form.get('description')
-        price = float(request.form.get('price'))
+        price = request.form.get('price')
         conn = dbi.connect()
         itid = dbact.update_sell_card(conn, cid, session.get('uid'), price, description)
         dbact.change_card_count(conn, cid, True)
@@ -161,9 +162,21 @@ def upload_pic(cid, itid):
         card = dbact.get_card_info(conn, cid)
         return render_template('sell_upload_pic.html', itid = itid, card = card, uid=session.get('uid'), usrname=session.get('username'))
     else:
-        return redirect("success")
+        try:
+            f = request.files['pic']
+            pathname = os.path.join(app.config['UPLOADS'], str(itid) + ".jpg")
+            f.save(os.path.join("static", pathname))
 
-@app.route('/success', methods=['GET'])
+            conn = dbi.connect()
+            card = dbact.get_card_info(conn, cid)
+            item = dbact.get_item_info(conn, itid)
+            return render_template("sell_review_info.html", item = item[0], card = card, pathname = pathname)
+
+        except Exception as err:
+            flash('Upload failed {why}'.format(why=err))
+            return redirect(url_for("upload_pic", cid=cid, itid = itid))
+        
+@app.route('/success', methods=['GET', "POST"])
 def success():
     return render_template('transaction_success.html', uid=session.get('uid'), usrname=session.get('username'))
 
