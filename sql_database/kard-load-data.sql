@@ -1,4 +1,4 @@
-use kard_db;
+use mt1_db;
 
 load data local infile 'group-list.csv'
 into table `group`

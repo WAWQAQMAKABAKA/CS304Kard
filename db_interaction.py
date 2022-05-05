@@ -228,3 +228,47 @@ def filepath_generator(lists, path, file_name, file_type):
         l['path'] = os.path.join(path, str(l[file_name]) + file_type)
     
     return lists
+
+def get_most_popular_cards(conn):
+    """This function gets 8 most popular cards in the database ordered by count
+
+    Args:
+        conn: connection to our database
+
+    Returns:
+        list: a list of dictionary objects, each with keys cid, count, name
+    """    
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        select cid, count, idol.name as name
+        from card
+        inner join idol using (idid)
+        order by count DESC
+        limit 8;
+    '''
+    curs.execute(sql)
+    cards = curs.fetchall()
+
+    return cards
+
+def get_username(conn, uid):
+    """This function retrieves the username of the user specified by the uid
+
+    Args:
+        conn: connection to our database
+        uid: user ID of this user, serve as unique identifier
+
+    Returns:
+        usrname: a dictionary containing the name of this user
+    """    
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        select name from user
+        where uid=%s;
+    '''
+    curs.execute(sql, [uid])
+    usrname = curs.fetchone()
+    if usrname is not None:
+        usrname = usrname.get('name')
+
+    return usrname

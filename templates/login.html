@@ -3,26 +3,44 @@
 {% block nav %}{% endblock %}
 
 {% block main_content %}
+<p></p>
+<section id="login" class="container pb-5 vh-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card bg-primary text-white h-100" style="border-radius: 1rem;">
+                <div class="card-body p-5 text-center">
 
-<form action="/login" method="POST">
-    <div class="login">
-        <div class="login-screen">
-            <div class="app-title">
-                <h1>Login</h1>
+                    <div class="mb-md-5 mt-md-4 pb-5">
+
+                        <h2 class="card-title">Login</h2>
+                        <p class="text-white-50 mb-5">Please enter your login and password!</p>
+
+                        <form id="login_form" method="post" action="{{url_for('login')}}">
+                            <div class="form-inline form-white mb-4 form-group row">
+                                <label class="col-md-5 col-form-label form-control-label" for="userid">User ID</label>
+                                <input type="text" name="uid" id="userid" class="form-control form-control-lg col-md-6" />
+                            </div>
+
+                            <div class="form-inline form-white mb-4 form-group row">
+                                <label class="col-md-5 col-form-label form-control-label" for="typePasswordX">Password</label>
+                                <input type="password" id="typePasswordX" class="form-control form-control-lg col-md-6" />
+                            </div>
+
+                            <input class="btn btn-outline-light btn-lg px-5" type="submit" value="Login"></input>
+                        </form>
+
+                    </div>
+
+                    <div>
+                        <!--TODO: create account not implemented yet-->
+                        <p class="mb-0">Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a>
+                        </p>
+                    </div>
+
+                </div>
             </div>
-        <div class="login-form">
-            <div class="control-group">
-                <input type="text" class="login-field" value="" placeholder="username" name="username">
-                <label class="login-field-icon fui-user" for="login-name"></label>
-            </div>
-        <div class="control-group">
-            <input type="password" class="login-field" value="" placeholder="password" name="password">
-            <label class="login-field-icon fui-lock" for="login-pass"></label>
         </div>
-         <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block">
-       </div>
-      </div>
-     </div>
-    </form>
+    </div>
+</section>
 
 {% endblock %}
