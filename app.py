@@ -57,7 +57,6 @@ def buy():
         return render_template('buy_group.html', groups = groups, uid=session.get('uid'), usrname=session.get('username'))
     else:
         gid = request.form.get('group')
-        uid = session.get('uid')
         return redirect(url_for('buy_group', gid = gid))
 
 @app.route('/buy/g<gid>', methods=['GET','POST'])
@@ -65,11 +64,9 @@ def buy_group(gid):
     if request.method == 'GET':
         conn = dbi.connect()
         albums = dbact.get_albums(conn, gid)
-        uid = session.get('uid')
         return render_template('buy_album.html', gid = gid, albums = albums, uid=session.get('uid'), usrname=session.get('username'))
     else:
         aid = request.form.get('album')
-        uid = session.get('uid')
         return redirect(url_for('buy_album', aid = aid))
 
 @app.route('/buy/a<aid>', methods = ['GET', 'POST'])
@@ -78,7 +75,6 @@ def buy_album(aid):
         conn = dbi.connect()
         cards = dbact.get_available_albumcards(conn, aid)
         cards = dbact.filepath_generator(cards, app.config['CARDPIC'],'cid', '.JPG')
-        uid = session.get('uid')
         return render_template('buy_cards.html', aid = aid, cards = cards, uid=session.get('uid'), usrname=session.get('username'))
     else:
         cid = request.form.get('card')
@@ -91,7 +87,7 @@ def buy_card(cid):
         items = dbact.get_available_carditem(conn, cid)
         items = dbact.filepath_generator(items, app.config['UPLOADS'], 'itid', '.jpg')
 
-        return render_template('buy_items.html', cid = cid, items = items)
+        return render_template('buy_items.html', cid = cid, items = items, uid=session.get('uid'), usrname=session.get('username'))
     else:
         itid = request.form.get('item')
         return redirect(url_for('buy_item', itid = itid))
@@ -116,11 +112,9 @@ def sell():
     if request.method == 'GET':
         conn = dbi.connect()
         groups = dbact.get_all_groups(conn)
-        uid = session.get('uid')
         return render_template('sell_group.html', groups = groups, uid=session.get('uid'), usrname=session.get('username'))
     else:
         gid = request.form.get('group')
-        uid = session.get('uid')
         return redirect(url_for('sell_group', gid = gid))
 
 @app.route('/sell/g<gid>', methods=['GET','POST'])
@@ -129,7 +123,6 @@ def sell_group(gid):
         conn = dbi.connect()
         albums = dbact.get_albums(conn, gid)
         idols = dbact.get_idols(conn, gid)
-        uid = session.get('uid')
         return render_template('sell_album.html', gid = gid, albums = albums, idols = idols, uid=session.get('uid'), usrname=session.get('username'))
     else:
         aid = request.form.get('album')
