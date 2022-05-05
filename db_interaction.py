@@ -203,14 +203,6 @@ def get_card_info(conn, cid):
 
     return card
 
-def update_sell_card(conn):
-    curs = dbi.dict_cursor(conn)
-    sql = '''
-    
-    '''
-    curs.execute(sql, [nm, filename, filename])
-    conn.commit()
-
 def filepath_generator(lists, path, file_name, file_type):
     """This function generates a relative path to the file of the given file_type in the given path for each dictionary object in the list
 
@@ -272,3 +264,50 @@ def get_username(conn, uid):
         usrname = usrname.get('name')
 
     return usrname
+
+# Database Change
+def change_item_status(conn,itid,boughtby):
+    """This function updates the current item list
+
+    Args:
+        conn:connection to our database
+        itid(int): the itid of a given item
+        boughtby(int): buyer uid
+
+    Returns:
+        list: a list of dictionary object
+    """
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        update item set boughtby = %s, status = 'sold'
+        where itid = %s;
+    ''' 
+    curs.execute(sql, [boughtby,itid])
+    item = curs.fetchall()
+
+    return item
+
+def update_sell_card(conn, cid, upby, price, description):
+    '''This function add new card selling info into the existed database
+
+    Args:
+        conn: connection to our database
+        cid(int): the cid of a given card
+        upby(int): seller id
+        price(float): seller enter price infor
+        description: descrition of the given card
+
+    Returns:
+        list: a list of dictionary object
+    '''
+    curs = dbi.dict_cursor(conn)
+    sql = '''
+        insert into item(cid, upby, price, status, description) 
+        values(%s, %s, %s, "available", %s);
+
+        select LAST_INSERT_ID() as itid;
+    '''
+    curs.execute(sql,[cid, upby, price, description])
+    item = curs.fetchone()
+
+    return item['itid']
