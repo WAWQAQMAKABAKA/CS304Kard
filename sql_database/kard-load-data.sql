@@ -1,4 +1,4 @@
-use yc5_db;
+use mt1_db;
 
 load data local infile 'groups-list.csv'
 into table `group`

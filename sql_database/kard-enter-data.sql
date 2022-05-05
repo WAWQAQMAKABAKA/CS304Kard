@@ -1,4 +1,4 @@
-use yc5_db;
+use mt1_db;
  
 insert into `group`(gid,name)
 values

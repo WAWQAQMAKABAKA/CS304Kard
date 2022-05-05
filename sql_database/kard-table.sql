@@ -1,4 +1,4 @@
-use yc5_db;
+use mt1_db;
 
 drop table if exists buy;
 drop table if exists sell;
